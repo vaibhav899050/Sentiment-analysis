@@ -2,6 +2,7 @@ import subprocess
 import os
 import pandas as pd
 import csv
+from googletrans import Translator
 
 def run_scraper():
     command = 'python selenium-twitter-scraper-master/scraper -t 100 -q "Larsen and Tourbo" --latest'
@@ -19,9 +20,22 @@ if __name__ == "__main__":
 
     # Replace 'file_path.csv' with the path to your CSV file
     file_path = 'tweets/Extracted.csv'
+    file_path = 'tweets/Extracted.csv'
+    df = pd.read_csv(file_path)
+    translator = Translator()
+
+
+    def translate_to_english(text):
+        translation = translator.translate(text, dest='en')
+        return translation.text
+
+
+    df['content_english'] = df['Content'].apply(translate_to_english)
+    df.to_csv('tweets/translated_file.csv', index=False)
 
     # Import the CSV file into a pandas DataFrame
-    dataframe = pd.read_csv(file_path)
+    newpath = 'tweets/translated_file.csv'
+    dataframe = pd.read_csv(newpath)
 
     # Convert the 'Timestamp' column to datetime format
     # dataframe['Timestamp'] = pd.to_datetime(dataframe['Timestamp'])
@@ -44,14 +58,14 @@ if __name__ == "__main__":
     #     with open(file_name, 'w', encoding='utf-8') as file:
     #         file.write(month_content)
 
-    with open(file_path, 'r') as csv_file:
+    with open(newpath, 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)  # Skip the header row if there is one
 
         with open(folder_path, 'w') as txt_file:
             for row in csv_reader:
                 # Assuming your content is in the first column, change the index if different
-                content = row[4]
+                content = row[15]
                 txt_file.write(content + '@#$%\n')
 
 

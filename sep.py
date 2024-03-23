@@ -2,10 +2,10 @@ import os
 import pandas as pd
 
 # Replace 'file_path.csv' with the path to your CSV file
-file_path = 'selenium-twitter-scraper-master/tweets/Extracted.csv'
+file_path = 'testing/news.csv'
 
 # Import the CSV file into a pandas DataFrame
-dataframe = pd.read_csv(file_path)
+dataframe = pd.read_csv(file_path, encoding='windows-1252')
 
 # Convert the 'Timestamp' column to datetime format
 dataframe['Timestamp'] = pd.to_datetime(dataframe['Timestamp'])
@@ -17,7 +17,7 @@ dataframe['Year_Month'] = dataframe['Timestamp'].dt.to_period('M')
 grouped_by_month = dataframe.groupby('Year_Month')
 
 # Create a folder named 'diary' if it doesn't exist
-folder_path = 'diary'
+folder_path = 'diary_money'
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
 
@@ -25,7 +25,7 @@ if not os.path.exists(folder_path):
 for month, group in grouped_by_month:
     month_content = '\n'.join(group['Content'])  # Combine content for the month
     file_name = os.path.join(folder_path, f'{month}.txt')
-    with open(file_name, 'w') as file:
+    with open(file_name, 'w',encoding='windows-1252', errors='replace') as file:
         file.write(month_content)
 
 print("Content for each month has been combined and saved into separate text files in the 'diary' folder.")
